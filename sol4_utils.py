@@ -183,34 +183,3 @@ def pyramid_blending(im1, im2, mask, max_levels, filter_size_im, filter_size_mas
     coeff = np.ones(np.shape(laplac_out))
     im_blend = laplacian_to_image(laplac_out, filter_vec, coeff)
     return np.clip(im_blend, 0, 1)
-
-
-
-
-#HALEVIS:
-
-def create_gaussian_kernel(kernel_size):
-    """
-    creates a gaussian kernel in the given sized
-    :param kernel_size: the size of the gaussian kernel
-    :return: a gaussian kernel matrix
-    """
-    if kernel_size > 1:
-        gaussian = conv(BINOMIAL_BASE, BINOMIAL_BASE)
-        for i in range(kernel_size - 3):
-            gaussian = conv(gaussian, BINOMIAL_BASE)
-        gaussian = conv(gaussian, gaussian.T)
-        gaussian /= np.sum(gaussian)
-        return gaussian
-    return BINOMIAL_BASE
-
-
-def blur_spatial222(im, kernel_size):
-    """
-    Performs image blurring using 2D convolution with a gaussian kernel.
-    :param im: the image to be blurred (grayscale float64 image)
-    :param kernel_size: the size of the gaussian kernel
-    :return: a blurred image (grayscale float64 image)
-    """
-    gaussian_kernel = create_gaussian_kernel(kernel_size)
-    return conv(im, gaussian_kernel, mode='same', boundary='wrap')
